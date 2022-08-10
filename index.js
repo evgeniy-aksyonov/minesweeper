@@ -38,10 +38,32 @@ function startGame(width, height, bombsCount) {
   }
 
   function openCell(row, column) {
+    if (!isValidCell(row, column)) return;
+
     const index = row * width + column;
     const cell = cells[index];
-    cell.innerHTML = isBomb(row, column) ? 'X' : getBombsCount(row, column);
+
+    if (cell.disabled === true) return;
+
     cell.disabled = true;
+
+    if (isBomb(row, column)) {
+      cell.innerHTML = 'X';
+      return;
+    }
+
+    const bombsCount = getBombsCount(row, column);
+
+    if (bombsCount) {
+      cell.innerHTML = bombsCount;
+      return;
+    }
+
+    for (let x = -1; x <= 1; x++) {
+      for (let y = -1; y <= 1; y++) {
+        openCell(row + y, column + x);
+      }
+    }
   }
 
   function isBomb(row, column) {
