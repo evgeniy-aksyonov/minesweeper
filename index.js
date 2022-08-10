@@ -1,10 +1,11 @@
-startGame(8, 8, 10);
+startGame(10, 10, 12); // start game with width = 10, height = 10 and bombsCount = 12
 
 function startGame(width, height, bombsCount) {
   const field = document.querySelector('.field');
   const cellsCount = width * height;
   field.innerHTML = '<button></button>'.repeat(cellsCount);
   const cells = [...field.children];
+  let closedCellsCount = cellsCount;
 
   // create empty array 
   const bombs = [...Array(cellsCount).keys()]
@@ -24,17 +25,17 @@ function startGame(width, height, bombsCount) {
 
   // get bombs count near the cell
   function getBombsCount(row, column) {
-    let bombsCount = 0;
+    let count = 0;
 
     for (let x = -1; x <= 1; x++) {
       for (let y = -1; y <= 1; y++) {
         if (isBomb(row + y, column + x)) {
-          bombsCount++;
+          count++;
         }
       }
     }
 
-    return bombsCount;
+    return count;
   }
 
   function openCell(row, column) {
@@ -49,13 +50,20 @@ function startGame(width, height, bombsCount) {
 
     if (isBomb(row, column)) {
       cell.innerHTML = 'X';
+      alert('You lose!');
       return;
     }
 
-    const bombsCount = getBombsCount(row, column);
+    closedCellsCount--;
+    if (closedCellsCount === bombsCount) {
+      alert('You win!');
+      return;
+    }
 
-    if (bombsCount) {
-      cell.innerHTML = bombsCount;
+    const bombsNearCellCount = getBombsCount(row, column);
+
+    if (bombsNearCellCount) {
+      cell.innerHTML = bombsNearCellCount;
       return;
     }
 

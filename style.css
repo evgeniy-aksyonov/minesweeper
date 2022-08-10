@@ -9,7 +9,7 @@ body {
 
 .field {
   display: grid;
-  grid-template-columns: repeat(8, 50px);
+  grid-template-columns: repeat(10, 50px);
 }
 
 button {
