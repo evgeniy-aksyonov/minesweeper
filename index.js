@@ -16,27 +16,43 @@ function startGame(width, height, bombsCount) {
       return;
     }
 
-    const index = getCellIndex(e.target);
+    const index = cells.indexOf(e.target);
     const column = index % width;
     const row = Math.floor(index / width);
     openCell(row, column);
   });
 
+  // get bombs count near the cell
+  function getBombsCount(row, column) {
+    let bombsCount = 0;
+
+    for (let x = -1; x <= 1; x++) {
+      for (let y = -1; y <= 1; y++) {
+        if (isBomb(row + y, column + x)) {
+          bombsCount++;
+        }
+      }
+    }
+
+    return bombsCount;
+  }
+
   function openCell(row, column) {
     const index = row * width + column;
     const cell = cells[index];
-    cell.innerHTML = isBomb(index) ? 'X' : ' ';
+    cell.innerHTML = isBomb(row, column) ? 'X' : getBombsCount(row, column);
     cell.disabled = true;
   }
 
-  function isBomb(index) {
-    // const index = row * width + col; // index of the cell in the array
+  function isBomb(row, column) {
+    if (!isValidCell(row, column)) return false;
+
+    const index = row * width + column; // index of the cell in the array
     return bombs.includes(index);
   }
 
-  // returns index of the cell in the "cells" array
-  function getCellIndex(cell) {
-    return cells.indexOf(cell);
+  function isValidCell(row, column) {
+    return row >= 0 && row < height && column >= 0 && column < width;
   }
 }
 
